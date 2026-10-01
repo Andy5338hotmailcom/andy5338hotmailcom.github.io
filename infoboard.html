@@ -67,13 +67,16 @@
         .btn-preview:hover{
             background:#6a57c2;
         }
-        .btn-stable-disabled{
+        .btn-stable{
             display:inline-block;
-            background:#b8b2cc;
-            color:#eee;
+            background:#7b68d8;
+            color:#fff;
+            text-decoration:none;
             padding:12px 26px;
             border-radius:9px;
-            cursor:not-allowed;
+        }
+        .btn-stable:hover{
+            background:#6a57c2;
         }
         .tips{
             margin-top:32px;
@@ -91,7 +94,7 @@
         <p class="subtitle">多服务控制台配套展板程序</p>
         <div class="item">
             <div class="ver-text">正式版：<span id="stableVer">加载中...</span></div>
-            <div class="btn-stable-disabled">请等待开发完成</div>
+            <a id="stableLink" class="btn-stable">下载正式版</a>
         </div>
         <div class="item">
             <div class="ver-text">预览版：<span id="previewVer">加载中...</span></div>
@@ -108,13 +111,22 @@ async function loadVersion() {
         const res = await fetch(txtUrl);
         const text = await res.text();
         const lines = text.split(/\r?\n/);
-        // 按约定：第2行(索引1)正式版，第4行(索引3)预览版，8行(7)预览链接，9行(8)正式链接
+        // 第2行(索引1)正式版版本，第4行(索引3)预览版版本
         const stableVer = lines[1]?.trim() || "未知";
         const previewVer = lines[3]?.trim() || "未知";
-        const previewUrl = lines[7]?.trim();
-        // const stableUrl = lines[8]?.trim(); //正式版暂时不用
+        const previewUrl = lines[7]?.trim(); //第8行，预览版链接
+        const stableUrl = lines[10]?.trim(); //第11行，正式版链接
+
         document.getElementById("stableVer").innerText = stableVer;
         document.getElementById("previewVer").innerText = previewVer;
+
+        const stableDom = document.getElementById("stableLink");
+        if(stableUrl){
+            stableDom.href = stableUrl;
+        }else{
+            stableDom.style.display = "none";
+        }
+
         const aDom = document.getElementById("previewLink");
         if(previewUrl){
             aDom.href = previewUrl;
