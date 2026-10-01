@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wildgoose 大雁系统 - 艺术社团展板 下载</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", system-ui, Segoe UI, sans-serif;
+        }
+        body {
+            background-color: #e9e4f5;
+            color: #222;
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+        .container {
+            max-width: 620px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 18px;
+            padding: 42px;
+            box-shadow: 0 4px 22px rgba(0,0,0,0.12);
+        }
+        .back-btn{
+            text-align:left;
+            margin-bottom:20px;
+        }
+        .back-btn a{
+            color:#7b68d8;
+            text-decoration:none;
+        }
+        .back-btn a:hover{
+            text-decoration:underline;
+        }
+        h1 {
+            color: #7b68d8;
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 36px;
+        }
+        .item{
+            margin:24px 0;
+            text-align:left;
+            padding:20px;
+            background:#f7f5fc;
+            border-radius:12px;
+        }
+        .ver-text{
+            font-size:17px;
+            margin-bottom:14px;
+        }
+        .btn-preview{
+            display:inline-block;
+            background:#7b68d8;
+            color:#fff;
+            text-decoration:none;
+            padding:12px 26px;
+            border-radius:9px;
+        }
+        .btn-preview:hover{
+            background:#6a57c2;
+        }
+        .btn-stable-disabled{
+            display:inline-block;
+            background:#b8b2cc;
+            color:#eee;
+            padding:12px 26px;
+            border-radius:9px;
+            cursor:not-allowed;
+        }
+        .tips{
+            margin-top:32px;
+            color:#777;
+            font-size:14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn">
+            <a href="./index.html">← 返回下载中心</a>
+        </div>
+        <h1>Wildgoose 艺术社团展板</h1>
+        <p class="subtitle">多服务控制台配套展板程序</p>
+        <div class="item">
+            <div class="ver-text">正式版：<span id="stableVer">加载中...</span></div>
+            <div class="btn-stable-disabled">请等待开发完成</div>
+        </div>
+        <div class="item">
+            <div class="ver-text">预览版：<span id="previewVer">加载中...</span></div>
+            <a id="previewLink" class="btn-preview">下载预览版</a>
+        </div>
+        <div class="tips">
+            数据来源：版本检查配置文件
+        </div>
+    </div>
+<script>
+const txtUrl = "https://andy5338hotmailcom.github.io/appsdowlandpagesandupdate/update/infoboard/checkupdate.txt";
+async function loadVersion() {
+    try {
+        const res = await fetch(txtUrl);
+        const text = await res.text();
+        const lines = text.split(/\r?\n/);
+        // 按约定：第2行(索引1)正式版，第4行(索引3)预览版，8行(7)预览链接，9行(8)正式链接
+        const stableVer = lines[1]?.trim() || "未知";
+        const previewVer = lines[3]?.trim() || "未知";
+        const previewUrl = lines[7]?.trim();
+        // const stableUrl = lines[8]?.trim(); //正式版暂时不用
+        document.getElementById("stableVer").innerText = stableVer;
+        document.getElementById("previewVer").innerText = previewVer;
+        const aDom = document.getElementById("previewLink");
+        if(previewUrl){
+            aDom.href = previewUrl;
+        }else{
+            aDom.style.display = "none";
+        }
+    }catch(err){
+        console.error("读取版本文件失败",err);
+        document.getElementById("stableVer").innerText = "读取失败";
+        document.getElementById("previewVer").innerText = "读取失败";
+    }
+}
+loadVersion();
+</script>
+</body>
+</html>
